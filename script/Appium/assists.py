@@ -12,15 +12,10 @@
 
 # !/usr/bin/python3
 # Filename: assists.py
-import subprocess
 from appium import webdriver
 from appium.webdriver.common.touch_action import TouchAction
 from selenium.webdriver.support.ui import WebDriverWait
-import time, os, random, string
-
-# x = subprocess.run('appium &', shell=True)
-# print(x)
-# time.sleep(10)
+import time, os, random
 
 # ===========配置参数=============
 
@@ -28,10 +23,11 @@ desired_caps = {}
 desired_caps['platformName'] = 'Android'
 desired_caps['platformVersion'] = "7.0"
 desired_caps['deviceName'] = "Q37500120MS10024148"
-desired_caps['app'] = r'/Users/zhaojiaqi/Desktop/333.apk'
+desired_caps['app'] = r'/Users/zhaojiaqi/Documents/AppiumTest/Android/Apk/1.2.0.apk'
 desired_caps['appPackage'] = 'com.injoin.social'
 desired_caps['appActivity'] = 'com.injoin.social.ui.activity.StartPagerActivity'
 desired_caps['automationName'] = 'UiAutomator2'
+# desired_caps['noReset'] = 'true'
 driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
 
 
@@ -63,31 +59,18 @@ def choSwipe(x):
     loc = random.randint(200,1500)
     chg = random.randint(0,500)
     x1 = int(l[0] * 0.22)
-    x2 = int(l[0] * 0.52)
-    x3 = int(l[0] * 0.84)
-    y1 = int(l[1] * 0.75)
-    y2 = int(l[1] * 0.90)
-    y3 = int(l[1] * 0.50)
-    y4 = int(l[1] * 0.25)
+    y1 = int(l[1] * 0.50)
+    y2 = int(l[1] * 0.75)
+    y3 = int(l[1] * 0.25)
     if x == "down":
         driver.swipe(x1, y1, x1, y2, loc)
     elif x == "up":
-        driver.swipe(x1, y2, x1, y1, chg)
-    elif x == "upm":
-        driver.swipe(x2, y2, x2, y1-chg, 1000)
-    elif x == "upd":
-        driver.swipe(x3, y2, x3, y1-chg, 1000)
-    elif x == "upp":
-        driver.swipe(x1, y3, x1, y4, 1000)
-    elif x == "dop":
-        driver.swipe(x1, y3, x1, y1, 500)
-
+        driver.swipe(x1, y1, x1, y3, chg)
 
 def givePer():
     try:
         while driver.find_element_by_id(
-                'com.android.packageinstaller:id/permission_allow_button') or driver.find_element_by_id(
-                'com.injoin.social:id/parentPanel'):
+                'com.android.packageinstaller:id/permission_allow_button') or driver.find_element_by_id('com.injoin.social:id/parentPanel'):
             try:
                 driver.find_element_by_id('com.android.packageinstaller:id/permission_allow_button').click()
             except:
@@ -99,7 +82,7 @@ def givePer():
 
 
 def errPic():
-    path = "/Users/zhaojiaqi/Documents/测试文件/" + getDate()
+    path = "/Users/zhaojiaqi/Documents/AppiumTest/Android/Screenshots/" + getDate()
     if not os.path.exists(path):
         os.makedirs(path)
     path = path + '/' + getTime() + '-'
@@ -135,7 +118,7 @@ def rt12():
         return False
 
 def saveAcc(acc, nic):
-    fo = open("/Users/zhaojiaqi/Documents/account.txt", "a+")
+    fo = open("/Users/zhaojiaqi/Documents/AppiumTest/Android/account.txt", "a+")
     fo.write(acc + " " + nic + '\n')
     fo.close()
 

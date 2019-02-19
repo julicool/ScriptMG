@@ -16,22 +16,33 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from auto import views
+from auto import api
 
 urlpatterns = [
-    path('index/', views.index),
+    path('index/', views.index, name="index"),
+    path('surelogin', api.surelogin, name="surelogin"),
+
+    path('login', views.login, name="login"),
+
     path('scriptmanage', views.scriptmanage, name="scriptmanage"),
+    path('runscript', api.runscript, name="runscript"),
+    path('uploadfiles', api.uploadfiles, name="uploadfiles"),
+    path('deletefiles', api.deletefiles, name="deletefiles"),
+
     path('projectmanage', views.projectmanage, name="projectmanage"),
-    path('changeproject', views.changeproject, name="changeproject"),
-    path('deleteproject', views.deleteproject, name="deleteproject"),
-    path('createproject', views.createproject, name="createproject"),
-    path('runscript', views.runscript, name="runscript"),
-    path('uploadfiles', views.uploadfiles, name="uploadfiles"),
-    path('deletefiles', views.deletefiles, name="deletefiles"),
+    path('changeproject', api.changeproject, name="changeproject"),
+    path('deleteproject', api.deleteproject, name="deleteproject"),
+    path('createproject', api.createproject, name="createproject"),
+
+
     path('reschart', views.reschart, name="reschart"),
-    path('getreschart', views.getreschart, name="getreschart"),
+    path('getreschart', api.getreschart, name="getreschart"),
+
     path('chotime', views.chotime, name="chotime"),
-    path('showtime', views.showtime, name="showtime"),
-    path('foundjs', views.foundjs, name="foundjs"),
-    path('changetime', views.changetime, name="changetime"),
+    path('showtime', api.showtime, name="showtime"),
+    path('changetime', api.changetime, name="changetime"),
+    path('foundjs', api.foundjs, name="foundjs"),
+
+    path('moblist', views.moblist, name="moblist"),
 
 ]

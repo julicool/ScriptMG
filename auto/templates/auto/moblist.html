@@ -1,0 +1,52 @@
+
+{% extends 'auto/index.html' %}
+{% block title %}设备列表{% endblock %}
+{% block exstyle %}
+#content > .ui.segment {
+  height: 100%;
+}
+
+{% endblock%}
+{% block content %}
+<div class="ui segment">
+	<div class="ui segment blue">
+		<h4 class="ui header blue">手机管理平台 > 设备列表</h4>
+	</div>
+	<div class="ui six column grid" id="timelist">
+
+        <div class="column">
+            <div class="ui segment">
+                <div class="ui move reveal">
+                    <div class="visible content">
+                    <img class="ui centered rounded tiny image" src="/static/img/sony.jpeg"></div>
+                    <div class="hidden content"></div>
+                </div>
+                <h4 class="ui center aligned header">sony</h4>
+                <div class="ui divider"></div>
+                <div class="ui two buttons">
+                    <div class="ui green button" onclick="#">借用</div>
+                    <div class="ui basic red button" onclick="#">关注</div>
+                </div>
+        </div></div>
+            <div class="column">
+                <div class="ui segment">
+                    <img class="ui centered rounded tiny image" src="/static/img/sony.jpeg">
+                    <h4 class="ui center aligned header">sony</h4>
+                    <div class="ui divider"></div>
+                    <div class="ui two buttons">
+                        <div class="ui red button" onclick="#">归还</div>
+                        <div class="ui basic grey button" onclick="#">续借</div>
+                    </div>
+            </div></div>
+
+    </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
+{% block exjs %}
+<script>
+</script>
+{% endblock %}

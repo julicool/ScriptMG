@@ -16,3 +16,8 @@ class timejob(models.Model):
 	stime = models.CharField(max_length=20)
 	pjname = models.CharField(max_length=20)
 	stat = models.IntegerField()
+
+class userlogin(models.Model):
+	username = models.CharField(max_length=50)
+	passwd = models.CharField(max_length=100)
+	authorizations = models.CharField(max_length=100)

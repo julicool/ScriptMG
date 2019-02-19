@@ -298,3 +298,9 @@ def changetime(request):
         return HttpResponse(json.dumps(x))
     except Exception as e:
         return HttpResponse(json.dumps(e))
+
+def moblist(request):
+    return  render(request, "auto/moblist.html")
+
+def login(request):
+    return  render(request, "auto/login.html")

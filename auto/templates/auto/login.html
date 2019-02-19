@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="/static/semantic/dist/semantic.min.css" rel="stylesheet" />
+
+    <style>
+    .container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        margin-bottom: 20px;
+        <!--background: url("/static/img/bg.jpg");-->
+        <!--background-size:100% auto;-->
+    }
+
+    .container-child {
+        position: absolute;
+        width: 450px;
+        height: 300px;
+        text-align: center;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+    }
+    </style>
+    <title>Mobile Manage</title>
+</head>
+<body>
+    <div class="container">
+    <div class="container-child">
+        <div class="ui segment" style="background-color: #F0FFFF">
+            <div class="header">Injoin</div>
+            <div class="ui divider"></div>
+            <div class="content">
+
+                <!--<form  method="post" name="login">-->
+                <div class="ui left icon input" id="un">
+                    <input type="text" placeholder="user name" name="un">
+                    <i class="address card icon"></i>
+                </div><br>
+                <div class="ui left icon input" style="margin:10px">
+                    <input type="password" placeholder="password" name="pw">
+                    <i class="shield alternate icon"></i>
+                </div><br>
+                <div class="ui buttons">
+                <button class="ui button" onclick="return ifempty()">login</button>
+                <!--</form>-->
+            <div class="or"></div>
+            <div class="ui positive button">scan</div>
+        </div></div></div>
+
+    </div></div>
+</body>
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+    <script>
+        function ifempty(){
+        var form = {};
+        form.un = $("input[name='un']").val();
+        console.log(form.un);
+        form.pw = $("input[name='pw']").val();
+        if (form.un == null || form.un == "")
+            { alert("username can not empty!")
+              $("input[name='un']").attr("class ");
+             return false; }
+        else if (form.pw == null || form.pw == "")
+            { alert("password can not empty!");
+             return false; }
+        else
+        {
+            var data = JSON.stringify(form);
+            $.ajax({
+            type: "post",
+            url: "{% url 'surelogin' %}",
+            data: data,
+            dataType: "json",
+            success: function(data){
+                if (data['resultCode']==0){
+                self.location.href="/index";
+                }
+                else if (data['resultCode']==1){
+                alert(data['resultContent']);}
+                else if (data['resultCode']==2){
+                alert(data['resultContent']);
+                self.location.href="/index";}
+                }
+            });
+
+        }
+        }
+
+
+
+
+
+    </script>
+
+
+</html>
