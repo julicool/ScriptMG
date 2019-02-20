@@ -30,7 +30,7 @@
 </head>
 <body>
     <div class="container">
-    <div class="container-child">
+    <div class="container-child" style="display:none;">
         <div class="ui segment" style="background-color: #F0FFFF">
             <div class="header">Injoin</div>
             <div class="ui divider"></div>
@@ -46,53 +46,119 @@
                     <i class="shield alternate icon"></i>
                 </div><br>
                 <div class="ui buttons">
-                <button class="ui button" onclick="return ifempty()">login</button>
-                <!--</form>-->
-            <div class="or"></div>
-            <div class="ui positive button">scan</div>
-        </div></div></div>
+                    <button class="ui button" onclick="ifempty()">login</button>
+                    <!--</form>-->
+                    <div class="or"></div>
+                    <div class="ui positive button">scan</div>
+                </div>
+            </div>
+        </div>
+        <div class="ui hidden small warning message" id="topic"><p></p></div>
+    </div>
 
-    </div></div>
+
+        <div class="container-child">
+            <div class="ui segment" style="background-color: #F0FFFF">
+                <div class="ui two column grid">
+                    <div class="column">
+                         <img class="ui rounded image" src="/static/img/111.png">
+                    </div>
+                    <div class="column">
+                        <div class="content" style="margin:20% auto;">扫描二维码登录</div>
+                            <button class="ui small red button">Back
+                            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="ui small modal">
+        <div class="header">提示</div>
+        <div class="content">该账号当前未注册，是否进行注册？</div>
+        <div class="actions">
+            <button class="positive ui small button" onclick="return sigin()">注册</button>
+            <button class="negative ui small button">取消</button>
+        </div>
+	</div>
+
+
+    </div>
+
+
+
 </body>
     <script src="/static/js/jquery-3.3.1.min.js"></script>
+    <script src="/static/semantic/dist/semantic.min.js"></script>
     <script>
         function ifempty(){
-        var form = {};
-        form.un = $("input[name='un']").val();
-        console.log(form.un);
-        form.pw = $("input[name='pw']").val();
-        if (form.un == null || form.un == "")
-            { alert("username can not empty!")
-              $("input[name='un']").attr("class ");
-             return false; }
-        else if (form.pw == null || form.pw == "")
-            { alert("password can not empty!");
-             return false; }
-        else
-        {
+            var form = {};
+            form.un = $("input[name='un']").val();
+            form.pw = $("input[name='pw']").val();
+            if (form.un == null || form.un == "" || form.pw == null || form.pw == ""){
+                warning("用户名/密码不能为空！");
+                return false;
+            }
+            else {
+                    for(var i=0; i<form.un.length; i++){
+                        if(!(( form.un.charCodeAt(i)>='0'.charCodeAt()&&form.un.charCodeAt(i)<='9'.charCodeAt()) ||
+                           ( form.un.charCodeAt(i)>='a'.charCodeAt()&&form.un.charCodeAt(i)<='z'.charCodeAt()) ||
+                           ( form.un.charCodeAt(i)>='A'.charCodeAt()&&form.un.charCodeAt(i)<='Z'.charCodeAt()) ||
+                           ( form.un.charCodeAt(i)=='_'.charCodeAt())) )
+                        {
+                            warning("用户名只能包含英文字母、数字、下划线");
+                            return false; }
+                    }
+            }
+            sureuser();
+        }
+
+        function sureuser(){
+            var form = {};
+            form.un = $("input[name='un']").val();
+            form.pw = $("input[name='pw']").val();
+            form.code = 0;
             var data = JSON.stringify(form);
             $.ajax({
-            type: "post",
-            url: "{% url 'surelogin' %}",
-            data: data,
-            dataType: "json",
-            success: function(data){
-                if (data['resultCode']==0){
-                self.location.href="/index";
-                }
-                else if (data['resultCode']==1){
-                alert(data['resultContent']);}
-                else if (data['resultCode']==2){
-                alert(data['resultContent']);
-                self.location.href="/index";}
+                type: "post",
+                url: "{% url 'surelogin' %}",
+                data: data,
+                dataType: "json",
+                success: function(data){
+                    if      (data['resultCode']==0){self.location.href="/index";}
+                    else if (data['resultCode']==1){warning(data['resultContent']);}
+                    else {$(".ui.modal").modal("show");}
                 }
             });
 
         }
+
+        function sigin(){
+            var form = {};
+            form.un = $("input[name='un']").val();
+            form.pw = $("input[name='pw']").val();
+            form.code = 1;
+            var data = JSON.stringify(form);
+            $.ajax({
+                type: "post",
+                url: "{% url 'surelogin' %}",
+                data: data,
+                dataType: "json",
+                success: function(data){
+                    if (data['resultCode']==3){
+                        self.location.href="/index";}
+                }
+            });
+
         }
 
 
+        function warning(content){
+            $("#topic p").text(content);
+            $("#topic").removeClass("hidden");
 
+        }
 
 
     </script>

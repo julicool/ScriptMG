@@ -30,13 +30,12 @@
 
             <div class="ui center aligned segment gray">
               <div class="ui dropdown">
-                <div class="text">
+                <div class="text" id="uname">
                     <img class="ui big avatar image" src="/static/img/avatar/people/enid.png">
-                    你好，欢迎
                 </div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                    <a class="item" href="/login">Sign Out</a>
+                    <a class="item" href="/login" onclick="delcookie()">Sign Out</a>
                 </div>
               </div>
             </div>
@@ -88,6 +87,31 @@
     <script src="/static/plugins/chartist/chartist.min.js"></script>
     <script src="/static/js/dashboard2.js"></script>
     <script src="/static/js/main.js"></script>
+    <script>
+        function getcookie(cname){
+            var ca = document.cookie.split(';');
+            var name = cname + "=";
+            for(var i=0; i<ca.length; i++){
+                var c = ca[i].trim();
+                if (c.indexOf(name)==0 && name.length != c.length) return c.substring(name.length,c.length);
+            }
+            self.location.href="/login";;
+        }
+
+        function delcookie(){
+            document.cookie = "username=; max_age=1; path=/";
+        }
+
+        function welcome(){
+            var cname = "username";
+            uname = getcookie(cname);
+            $("#uname").append(uname);
+
+        }
+
+        window.onload = welcome();
+
+    </script>
     {% block exjs %}{% endblock %}
 </body>
 

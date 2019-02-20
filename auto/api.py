@@ -305,6 +305,7 @@ def surelogin(request):
         userinfo = json.loads(request.body)
         username = userinfo['un']
         password = userinfo['pw']
+        usercode = userinfo['code']
         password_0 = userlogin.objects.filter(username=username).values('passwd')
         if password_0.exists():
             if password==password_0[0]['passwd'] :
@@ -312,19 +313,27 @@ def surelogin(request):
                 data["resultCode"] = 0
                 data["resultContent"] = str("success")
                 response = HttpResponse(json.dumps(data))
-                response.set_cookie('my_cookies', username)
+                response.set_cookie('username', username, max_age=20)
                 return response
             else:
                 data = {}
                 data["resultCode"] = 1
-                data["resultContent"] = str("please check your username/password")
+                data["resultContent"] = str("用户名/密码错误")
                 return HttpResponse(json.dumps(data))
         else:
-            userlogin.objects.create(username=username, passwd=password)
-            if userlogin.objects.filter(username=username).values('passwd').exists():
+
+            if usercode==0:
                 data = {}
                 data["resultCode"] = 2
-                data["resultContent"] = str("register success")
-                response = HttpResponse(json.dumps(data))
-                response.set_cookie('my_cookies', username)
-                return response
+                data["resultContent"] = str("当前用户未注册")
+                return HttpResponse(json.dumps(data))
+
+            elif usercode==1:
+                userlogin.objects.create(username=username, passwd=password)
+                if userlogin.objects.filter(username=username).values('passwd').exists():
+                    data = {}
+                    data["resultCode"] = 3
+                    data["resultContent"] = str("注册成功")
+                    response = HttpResponse(json.dumps(data))
+                    response.set_cookie('username', username, max_age=20)
+                    return response
