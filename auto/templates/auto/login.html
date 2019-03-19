@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="/static/semantic/dist/semantic.min.css" rel="stylesheet" />
+    <link href="/static/semantic/dist/semantic.min.css" rel="stylesheet"/>
 
     <style>
     .container {
@@ -25,73 +25,70 @@
         right: 0;
         margin: auto;
     }
+
     </style>
     <title>Mobile Manage</title>
 </head>
 <body>
-    <div class="container">
-    <div class="container-child" style="display:none;">
-        <div class="ui segment" style="background-color: #F0FFFF">
-            <div class="header">Injoin</div>
-            <div class="ui divider"></div>
-            <div class="content">
-
-                <!--<form  method="post" name="login">-->
-                <div class="ui left icon input" id="un">
-                    <input type="text" placeholder="user name" name="un">
-                    <i class="address card icon"></i>
-                </div><br>
-                <div class="ui left icon input" style="margin:10px">
-                    <input type="password" placeholder="password" name="pw">
-                    <i class="shield alternate icon"></i>
-                </div><br>
-                <div class="ui buttons">
-                    <button class="ui button" onclick="ifempty()">login</button>
-                    <!--</form>-->
-                    <div class="or"></div>
-                    <div class="ui positive button">scan</div>
+<div class="container">
+    <div class="container-child">
+        <div class="ui shape">
+            <div class="sides">
+                <div class="side active">
+                    <div class="ui segment" style="background-color: #F0FFFF; width: 450px;">
+                        <div class="header">Injoin</div>
+                        <div class="ui divider"></div>
+                        <div class="content">
+                            <div class="ui left icon input" id="un">
+                                <input type="text" placeholder="user name" name="un">
+                                <i class="address card icon"></i>
+                            </div><br>
+                            <div class="ui left icon input" style="margin:10px auto">
+                                <input type="password" placeholder="password" name="pw">
+                                <i class="shield alternate icon"></i>
+                            </div><br>
+                            <div class="ui buttons">
+                                <button class="ui button" onclick="ifempty()">login</button>
+                                <div class="or"></div>
+                                <div class="ui positive button">scan</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui hidden small warning message" id="topic"><p></p></div>
+                </div>
+                <div class="ui side">
+                    <div class="ui segment" style="background-color: #F0FFFF; width: 450px;">
+                        <div class="ui two column grid">
+                            <div class="column">
+                                <img class="ui rounded image" src="/static/img/mobimg/111.png">
+                            </div>
+                            <div class="column">
+                                <div class="content" style="margin:20% auto;">扫描二维码登录</div>
+                                <button class="ui small positive button">Back</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="ui hidden small warning message" id="topic"><p></p></div>
-    </div>
-
-
-        <div class="container-child">
-            <div class="ui segment" style="background-color: #F0FFFF">
-                <div class="ui two column grid">
-                    <div class="column">
-                         <img class="ui rounded image" src="/static/img/111.png">
-                    </div>
-                    <div class="column">
-                        <div class="content" style="margin:20% auto;">扫描二维码登录</div>
-                            <button class="ui small red button">Back
-                            </button>
-                    </div>
-                </div>
+        <div class="ui small modal">
+            <div class="header">提示</div>
+            <div class="content">该账号当前未注册，是否进行注册？</div>
+            <div class="actions">
+                <button class="positive ui small button" onclick="return sigin()">注册</button>
+                <button class="negative ui small button">取消</button>
             </div>
         </div>
-
     </div>
-
-    <div class="ui small modal">
-        <div class="header">提示</div>
-        <div class="content">该账号当前未注册，是否进行注册？</div>
-        <div class="actions">
-            <button class="positive ui small button" onclick="return sigin()">注册</button>
-            <button class="negative ui small button">取消</button>
-        </div>
-	</div>
-
-
-    </div>
-
+</div>
 
 
 </body>
-    <script src="/static/js/jquery-3.3.1.min.js"></script>
-    <script src="/static/semantic/dist/semantic.min.js"></script>
-    <script>
+<script src="/static/js/jquery-3.3.1.min.js"></script>
+<script src="/static/semantic/dist/semantic.min.js"></script>
+<script>
+
+
         function ifempty(){
             var form = {};
             form.un = $("input[name='un']").val();
@@ -126,7 +123,7 @@
                 data: data,
                 dataType: "json",
                 success: function(data){
-                    if      (data['resultCode']==0){self.location.href="/index";}
+                    if      (data['resultCode']==0){self.location.href="/moblist";}
                     else if (data['resultCode']==1){warning(data['resultContent']);}
                     else {$(".ui.modal").modal("show");}
                 }
@@ -147,7 +144,7 @@
                 dataType: "json",
                 success: function(data){
                     if (data['resultCode']==3){
-                        self.location.href="/index";}
+                        self.location.href="/moblist";}
                 }
             });
 
@@ -157,11 +154,15 @@
         function warning(content){
             $("#topic p").text(content);
             $("#topic").removeClass("hidden");
-
         }
 
+        $(".shape").shape();
+        $(".positive.button").on('click', function(){
+        $(".container-child").shape({duration:1500}).shape('flip back');
+         })
 
-    </script>
+
+</script>
 
 
 </html>

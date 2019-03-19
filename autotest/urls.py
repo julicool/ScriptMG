@@ -24,25 +24,20 @@ urlpatterns = [
 
     path('login', views.login, name="login"),
 
-    path('scriptmanage', views.scriptmanage, name="scriptmanage"),
-    path('runscript', api.runscript, name="runscript"),
-    path('uploadfiles', api.uploadfiles, name="uploadfiles"),
-    path('deletefiles', api.deletefiles, name="deletefiles"),
-
-    path('projectmanage', views.projectmanage, name="projectmanage"),
-    path('changeproject', api.changeproject, name="changeproject"),
-    path('deleteproject', api.deleteproject, name="deleteproject"),
-    path('createproject', api.createproject, name="createproject"),
-
-
-    path('reschart', views.reschart, name="reschart"),
-    path('getreschart', api.getreschart, name="getreschart"),
-
-    path('chotime', views.chotime, name="chotime"),
-    path('showtime', api.showtime, name="showtime"),
-    path('changetime', api.changetime, name="changetime"),
-    path('foundjs', api.foundjs, name="foundjs"),
-
     path('moblist', views.moblist, name="moblist"),
+    path('mob_stat', api.mob_stat, name="mob_stat"),
+    path('bor_mob', api.bor_mob, name="bor_mob"),
+
+    path('mobman', views.mobman, name="mobman"),
+    path('addmob', api.addmob, name="addmob"),
+    path('getmob', api.getmob, name="getmob"),
+    path('delmob', api.delmob, name="delmob"),
+    path('updmob', api.updmob, name="updmob"),
+    path('get_mob_list', api.get_mob_list, name="get_mob_list"),
+
+    path('mobche', views.mobche, name="mobche"),
+    path('exprmob', api.exprmob, name="exprmob"),
+    path('returnmob', api.returnmob, name="returnmob"),
+
 
 ]

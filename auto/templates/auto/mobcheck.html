@@ -1,0 +1,51 @@
+{% extends 'auto/index.html' %}
+{% block title %}设备管理{% endblock %}
+{% block exstyle %}
+#content > .ui.segment {
+height: 100%;
+}
+{% endblock %}
+{% block content %}
+<div class="ui segment">
+    <div class="ui segment blue">
+        <h4 class="ui header blue">手机管理平台 > 设备审核</h4>
+    </div>
+    <table class="ui selectable compact celled table">
+        <thead>
+        <tr>
+            <th style="display:none;">id</th>
+            <th>设备名称</th>
+            <th>借用人</th>
+            <th>借用时间</th>
+            <th>过期时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="mbshow">
+        </tbody>
+        <tfoot>
+        <tr>
+            <th colspan="8">
+                <div class="ui right floated pagination menu" id="foot_menu">
+                    <a class="item"><</a>
+                </div>
+            </th>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+<div class="ui mini modal" id="sureret">
+    <div class="header">归还确认</div>
+    <div class="content"></span>请确认 <span id="ret_name" style="color:red;font-weight: bold;"></span> 已归还</div>
+    <div class="actions">
+        <button class="ui mini positive button" id="ret_id">确认</button>
+        <button class="ui mini negative button">取消</button>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block exjs %}
+<script src="/static/js/template/mobcheck.js"></script>
+<script> window.onload = getmoblist(0);</script>
+{% endblock %}

@@ -1,52 +1,138 @@
-
 {% extends 'auto/index.html' %}
 {% block title %}设备列表{% endblock %}
 {% block exstyle %}
 #content > .ui.segment {
-  height: 100%;
+height: 100%;
 }
 
 {% endblock%}
 {% block content %}
 <div class="ui segment">
-	<div class="ui segment blue">
-		<h4 class="ui header blue">手机管理平台 > 设备列表</h4>
-	</div>
-	<div class="ui six column grid" id="timelist">
-
-        <div class="column">
-            <div class="ui segment">
-                <div class="ui move reveal">
-                    <div class="visible content">
-                    <img class="ui centered rounded tiny image" src="/static/img/sony.jpeg"></div>
-                    <div class="hidden content"></div>
-                </div>
-                <h4 class="ui center aligned header">sony</h4>
-                <div class="ui divider"></div>
-                <div class="ui two buttons">
-                    <div class="ui green button" onclick="#">借用</div>
-                    <div class="ui basic red button" onclick="#">关注</div>
-                </div>
-        </div></div>
-            <div class="column">
-                <div class="ui segment">
-                    <img class="ui centered rounded tiny image" src="/static/img/sony.jpeg">
-                    <h4 class="ui center aligned header">sony</h4>
-                    <div class="ui divider"></div>
-                    <div class="ui two buttons">
-                        <div class="ui red button" onclick="#">归还</div>
-                        <div class="ui basic grey button" onclick="#">续借</div>
-                    </div>
-            </div></div>
-
+    <div class="ui segment blue">
+        <h4 class="ui header blue">手机管理平台 > 设备列表</h4>
     </div>
-
+    <div class="ui segment"  style="overflow-y: auto; height: 94%;"><div class="ui six column grid" id="timelist"></div>
     </div>
 </div>
 
 
+<div class="ui mini modal" id="bro_time">
+    <div class="header">借用时长</div>
+    <div class="content">
+        <input id="u_id" type="text" name="id" style="display:none">
+        <input id="u_name" type="text" name="username" style="display:none">
+        <div class="ui fluid input">
+            <input type="text" name="last_time" placeholder="请输入借用时长"></div>
+        <div class="ui hidden warning mini message" id="topic"><p></p></div>
+    </div>
+    <div class="actions">
+        <button class="ui button" type="submit" value="submit" onclick="return time_sure()">提交</button>
+        <div class="ui negative button">取消</div>
+    </div>
+</div>
+
 {% endblock %}
 {% block exjs %}
 <script>
+
+window.onload = show_mob();
+function show_mob(){
+    $.ajax({
+    type: "post",
+    url: "/mob_stat",
+    data: "",
+    dataType: "json",
+    success: function(data){
+        $.each(data, function(k, v){
+            $("#timelist").append("<div class='column'><div class='ui card' id=" + v['id'] + "></div></div>");
+            $("#" + v['id']).append('<div class="content"></div><div class="ui move up reveal"></div>');
+            $("#" + v['id'] + " .content").append('<header class="ui center aligned header">' + v["mobname__deploy_name"] + v["mobmodel"] + '</div>');
+            $("#" + v['id'] + " .reveal").append('<div class="visible content"><img class="ui image" src="/static/img/mobimg/111.png"></div><div class="hidden center aligned content"></div>');
+            if(v['system_type']==0){
+                $("#" + v['id'] + " .hidden").append("<p>系统：安卓" + v['system_numb'] + "</p>");}
+            else if(v['system_type']==1){
+                $("#" + v['id'] + " .hidden").append("<p>系统：iOS" + v['system_numb'] + "</p>");}
+            $("#" + v['id'] + " .hidden").append("<p>分辨率：" + v['resolution'] + "</p>");
+            if(v['username']!=null){
+                $("#" + v['id'] + " .hidden").append("<p>借用人：" + v['username'] + "</p>");
+                $("#" + v['id'] + " .hidden").append("<p>借用时间：" + v['frist_time'] + "</p>");
+                $("#" + v['id'] + " .hidden").append("<p>归还时间：" + v['last_time'] + "</p>");
+                $("#" + v['id']).append('<div class="ui bottom attached grey disabled button" onclick="#">借用</div>');}
+            else {
+                $("#" + v['id'] + " .hidden").append('<p>借用人：无</p>');
+                $("#" + v['id']).append('<div class="ui bottom attached grey button" onclick="add_time(' + v["id"] + ')">借用</div>')};
+        })
+    }
+    })
+}
+
+function getcookie(cname){
+    var ca = document.cookie.split(';');
+    var name = cname + "=";
+    for(var i=0; i<ca.length; i++){
+        var c = ca[i].trim();
+        if (c.indexOf(name)==0 && name.length != c.length) return c.substring(name.length,c.length);
+    }
+}
+
+function add_time(id){
+    var x = getcookie("username");
+    if(x){
+        $("[name='username']").val(x);}
+    else{
+        $("[name='username']").val("游客");}
+    $("#u_id").val(id);
+    $("#bro_time").modal("show");
+
+}
+
+function time_sure(){
+    var form = {};
+    form.id = $("#bro_time input[name='id']").val();
+    form.username = $("#bro_time input[name='username']").val();
+    form.last_time = $("#bro_time input[name='last_time']").val();
+    if(form.id==""){ warning("获取手机信息失败"); return false; }
+    if(form.username==""){ warning("请重新登陆"); return false; }
+    if(form.last_time==""){ warning("时长不能为空"); return false; }
+    else{
+        for(var i=0; i<form.last_time.length; i++){
+            if(!( form.last_time.charCodeAt(i)>='0'.charCodeAt()&&form.last_time.charCodeAt(i)<='9'.charCodeAt()))
+            {
+                warning("只能输入数字1～12");
+                return false;
+            }
+        if(form.last_time>24 || form.last_time<1){
+                warning("允许借用时间为1～24");
+                return false; }
+        }
+    }
+    com_time(form.id, form.username, form.last_time);
+}
+
+function warning(content){
+    $("#topic p").text(content);
+    $("#topic").removeClass("hidden");
+}
+
+function com_time(u_id, u_name, last_time){
+    var x = {'u_id':u_id, 'u_name':u_name, 'last_time':last_time}
+    var data = JSON.stringify(x);
+    $.ajax({
+        type: "post",
+        url:"/bor_mob",
+        data:data,
+        dataType:"json",
+        success:function(data){
+            if(data['resultCode']!=0){
+                warning(data['resultMess']);
+            }
+            else{
+               self.location.href="/moblist";
+            }
+        }
+    })
+}
+
+
 </script>
 {% endblock %}

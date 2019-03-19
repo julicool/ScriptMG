@@ -2,117 +2,92 @@
 <html lang="ch">
 <head>
     <title>{% block title %}接口自动化平台{% endblock %}</title>
-    <link rel="icon" href="/static/img/EiffelTower.jpg" />
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name=viewport content="width=device-width, initial-scale=1" />
-    <link href="/static/semantic/dist/semantic.min.css" rel="stylesheet" />
-    <link href="/static/plugins/ionicons/css/ionicons.min.css" rel="stylesheet" />
-    <link href="/static/css/main.css" rel="stylesheet" />
-    <link href="/static/plugins/datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
-    <link href="/static/plugins/weather-icons/css/weather-icons-wind.min.css" rel="stylesheet" />
-    <link href="/static/plugins/weather-icons/css/weather-icons.min.css" rel="stylesheet" />
-    <link href="/static/plugins/chartist/chartist.min.css" rel="stylesheet" />
-    <link href="/static/css/chat-page.css" rel="stylesheet" />
-    <link rel="shortcut icon" href="/static//static/img/favicon.ico" />
+    <link rel="icon" href="/static/img/EiffelTower.jpg"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link href="/static/semantic/dist/semantic.min.css" rel="stylesheet"/>
+    <link href="/static/plugins/ionicons/css/ionicons.min.css" rel="stylesheet"/>
+    <link href="/static/css/main.css" rel="stylesheet"/>
     {% block excss %}{% endblock %}
     <style type="text/css">{% block exstyle %}{% endblock %}</style>
-    
-    
-
 </head>
 
-<body  style="height:100%">
-    <div id="contextWrap" style="height:100%"> 
-        <!--左侧菜单-->
-        <div class="ui sidebar vertical left menu visible inverted black" style="-webkit-transition-duration: 0.1s; transition-duration: 0.1s;height:100%" data-color="grey">
-            <!--左上角logo-->
-
-            <div class="ui center aligned segment gray">
-              <div class="ui dropdown">
-                <div class="text" id="uname">
-                    <img class="ui big avatar image" src="/static/img/avatar/people/enid.png">
-                </div>
-                <i class="dropdown icon"></i>
-                <div class="menu">
-                    <a class="item" href="/login" onclick="delcookie()">Sign Out</a>
-                </div>
-              </div>
+<body style="height:100%">
+<!--左侧菜单-->
+<div class="ui visible sidebar inverted black vertical left menu">
+    <!--左上角logo-->
+    <div class="ui center aligned segment gray">
+        <div class="ui dropdown">
+            <div class="text" id="uname">
+                <img class="ui big avatar image" src="/static/img/avatar/people/enid.png">
             </div>
-
-            <div class="ui accordion inverted">
-                <!--菜单1-->
-                <a class="title item">
-                    <i class="ion-speedometer titleIcon icon"></i>测试脚本管理<i class="dropdown icon"></i>
-                </a>
-                <div class="content">
-                    <a class="item" href="{% url 'scriptmanage' %}">脚本管理</a>
-                    <a class="item" href="{% url 'projectmanage' %}">项目管理</a>
-                    <a class="item" href="{% url 'chotime' %}">定时任务</a>
-                    <a class="item" href="{% url 'reschart' %}">执行记录</a>
-                </div>
-                <!--菜单2-->
-                <div class="title item">
-                    <i class="ion-ios-lightbulb titleIcon icon"></i>手机管理平台<i class="dropdown icon"></i>
-                </div>
-                <div class="content">
-                    <a class="item" href="{% url 'moblist'%}">机型列表</a>
-                    <a class="item" href="#">我的设备</a>
-                    <a class="item" href="#">借用记录</a>
-                </div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+                <a class="item" href="/login" onclick="delcookie()">Sign Out</a>
             </div>
-        </div>
-        
-
-        <!--以下是主要内容部分-->
-        <div class="mainWrap navslide" id="content"  style="height:100%">
-        {% block content %}<div class="ui segment" style="height:100%"><p>欢迎使用自动化测试平台</p></div>{% endblock %}
         </div>
     </div>
 
+    <div class="ui accordion inverted">
+        <!--菜单-->
+        <div class="title item">
+            <i class="mobile alternate titleIcon icon"></i>手机管理平台<i class="dropdown icon"></i>
+        </div>
+        <div class="content" id="list">
+            <a class="item" href="{% url 'moblist'%}">机型列表</a>
+            <a class="item" href="{% url 'mobche' %}" id="sh">设备审核</a>
+            <a class="item" href="{% url 'mobman'%}" id="gl">设备管理</a>
+        </div>
+    </div>
+</div>
 
-    <!--引入js-->
-    <script src="/static/js/jquery-3.3.1.min.js"></script>
-    <script src="/static/semantic/dist/semantic.min.js"></script>
-    <script src="/static/plugins/counterup/jquery.counterup.min.js"></script>
-    <script src="/static/plugins/counterup/waypoints.min.js"></script>
-    <script src="/static/plugins/flot/jquery.flot.js"></script>
-    <script src="/static/plugins/flot/jquery.flot.resize.min.js"></script>
-    <script src="/static/plugins/flot/jquery.flot.tooltip.min.js"></script>
-    <script src="/static/plugins/flot/curvedLines.js"></script>
-    <script src="/static/plugins/cookie/js.cookie.js"></script>
-    <script src="/static/plugins/chartjs/chart.min.js"></script>
-    <script src="/static/plugins/nicescrool/jquery.nicescroll.min.js"></script>
-    <script data-pace-options='{ "ajax": false }' src="/static/plugins/pacejs/pace.js"></script>
-    <script src="/static/plugins/chartist/chartist.min.js"></script>
-    <script src="/static/js/dashboard2.js"></script>
-    <script src="/static/js/main.js"></script>
-    <script>
-        function getcookie(cname){
-            var ca = document.cookie.split(';');
-            var name = cname + "=";
-            for(var i=0; i<ca.length; i++){
-                var c = ca[i].trim();
-                if (c.indexOf(name)==0 && name.length != c.length) return c.substring(name.length,c.length);
-            }
-            self.location.href="/login";;
+
+<!--以下是主要内容部分-->
+<div class="mainWrap navslide" id="content" style="height:100%">
+    {% block content %}
+    <div class="ui segment" style="height:100%"><p>欢迎使用自动化测试平台</p></div>
+    {% endblock %}
+</div>
+
+
+<!--引入js-->
+<script src="/static/js/jquery-3.3.1.min.js"></script>
+<script src="/static/semantic/dist/semantic.min.js"></script>
+
+<script>
+function getcookie(cname){
+    var ca = document.cookie.split(';');
+    var name = cname + "=";
+    for(var i=0; i<ca.length; i++){
+        var c = ca[i].trim();
+        if (c.indexOf(name)==0 && name.length!=c.length){
+        uname = c.substring(name.length,c.length);
+        if(uname!="admin"){$("#sh").remove();$("#gl").remove();}
+        return uname;
         }
+    }
+    <!--self.location.href="/login";-->
+}
 
-        function delcookie(){
-            document.cookie = "username=; max_age=1; path=/";
-        }
+function delcookie(){
+    document.cookie = "username=; max_age=1; path=/";
+}
 
-        function welcome(){
-            var cname = "username";
-            uname = getcookie(cname);
-            $("#uname").append(uname);
+function welcome(){
+    var cname = "username";
+    uname = getcookie(cname);
+    $("#uname").append(uname);
+}
 
-        }
+window.onload = welcome();
 
-        window.onload = welcome();
+$('.ui.accordion')
+    .accordion();
 
-    </script>
-    {% block exjs %}{% endblock %}
+$('.ui.dropdown')
+  .dropdown();
+
+</script>
+{% block exjs %}{% endblock %}
 </body>
 
 </html>

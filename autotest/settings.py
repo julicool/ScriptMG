@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',   # 数据库引擎
         'NAME': 'test',         # 你要存储数据的库名，事先要创建之
         'USER': 'root',         # 数据库用户名
-        'PASSWORD': '',     # 密码
+        'PASSWORD': '',         # 密码
         'HOST': 'localhost',    # 主机
         'PORT': '3306',         # 数据库使用的端口
     }
@@ -119,19 +119,10 @@ USE_L10N = True
 USE_TZ = False
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
-
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'common_static'),
 )
 
-# 这个是默认设置，Django 默认会在 STATICFILES_DIRS中的文件夹 和 各app下的static文件夹中找文件
-# 注意有先后顺序，找到了就不再继续找了
-# STATICFILES_FINDERS = (
-#     "django.contrib.staticfiles.finders.FileSystemFinder",
-#     "django.contrib.staticfiles.finders.AppDirectoriesFinder"
-# )
+
 
