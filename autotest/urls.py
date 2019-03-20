@@ -38,6 +38,7 @@ urlpatterns = [
     path('mobche', views.mobche, name="mobche"),
     path('exprmob', api.exprmob, name="exprmob"),
     path('returnmob', api.returnmob, name="returnmob"),
+    path('uploadimg', api.uploadimg, name="uploadimg"),
 
 
 ]

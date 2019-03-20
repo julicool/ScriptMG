@@ -2,7 +2,7 @@
 <html lang="ch">
 <head>
     <title>{% block title %}接口自动化平台{% endblock %}</title>
-    <link rel="icon" href="/static/img/EiffelTower.jpg"/>
+    <link rel="icon" href="/static/img/mob.jpg"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <link href="/static/semantic/dist/semantic.min.css" rel="stylesheet"/>
     <link href="/static/plugins/ionicons/css/ionicons.min.css" rel="stylesheet"/>
@@ -54,6 +54,7 @@
 <script src="/static/semantic/dist/semantic.min.js"></script>
 
 <script>
+var oss_host = "http://julicool-img.oss-ap-southeast-1.aliyuncs.com/"
 function getcookie(cname){
     var ca = document.cookie.split(';');
     var name = cname + "=";
@@ -65,7 +66,7 @@ function getcookie(cname){
         return uname;
         }
     }
-    <!--self.location.href="/login";-->
+    self.location.href="/login";
 }
 
 function delcookie(){

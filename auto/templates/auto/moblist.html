@@ -47,11 +47,11 @@ function show_mob(){
             $("#timelist").append("<div class='column'><div class='ui card' id=" + v['id'] + "></div></div>");
             $("#" + v['id']).append('<div class="content"></div><div class="ui move up reveal"></div>');
             $("#" + v['id'] + " .content").append('<header class="ui center aligned header">' + v["mobname__deploy_name"] + v["mobmodel"] + '</div>');
-            $("#" + v['id'] + " .reveal").append('<div class="visible content"><img class="ui image" src="/static/img/mobimg/111.png"></div><div class="hidden center aligned content"></div>');
+            $("#" + v['id'] + " .reveal").append('<div class="visible content"><img class="ui image" src="'+ oss_host + v["id"] + '.jpg?x-oss-process=image/resize,h_500"></div><div class="hidden center aligned content"></div>');
             if(v['system_type']==0){
-                $("#" + v['id'] + " .hidden").append("<p>系统：安卓" + v['system_numb'] + "</p>");}
+                $("#" + v['id'] + " .hidden").append("<p></p><p>系统：安卓" + v['system_numb'] + "</p>");}
             else if(v['system_type']==1){
-                $("#" + v['id'] + " .hidden").append("<p>系统：iOS" + v['system_numb'] + "</p>");}
+                $("#" + v['id'] + " .hidden").append("<p></p><p>系统：iOS" + v['system_numb'] + "</p>");}
             $("#" + v['id'] + " .hidden").append("<p>分辨率：" + v['resolution'] + "</p>");
             if(v['username']!=null){
                 $("#" + v['id'] + " .hidden").append("<p>借用人：" + v['username'] + "</p>");
@@ -98,11 +98,11 @@ function time_sure(){
         for(var i=0; i<form.last_time.length; i++){
             if(!( form.last_time.charCodeAt(i)>='0'.charCodeAt()&&form.last_time.charCodeAt(i)<='9'.charCodeAt()))
             {
-                warning("只能输入数字1～12");
+                warning("只能输入数字");
                 return false;
             }
-        if(form.last_time>24 || form.last_time<1){
-                warning("允许借用时间为1～24");
+        if(form.last_time>168 || form.last_time<1){
+                warning("允许借用时间为1～168h");
                 return false; }
         }
     }

@@ -220,7 +220,7 @@ height: 100%;
         <div class="header">删除</div>
         <div class="content"></span>确认删除<span id="del_name" style="color:red;font-weight: bold;"></span> ？</div>
         <div class="actions">
-            <button class="ui mini positive button" id="del_id" >确认</button>
+            <button class="ui mini positive button" id="del_id">确认</button>
             <button class="ui mini negative button">取消</button>
         </div>
     </div>
@@ -228,17 +228,20 @@ height: 100%;
     <div class="ui mini modal" id="upimg">
         <div class="header">上传图片</div>
         <div class="content">
-            <input type="file" name="mobimg" id="mobimg" accept="image/jpeg">
+            <form action="/uploadimg" method="post" enctype="multipart/form-data">
+                <input type="text" name="id" style="display:none" id="mobid">
+                <input type="file" name="mobimg" id="mobimg" accept="image/jpeg">
         </div>
         <div class="actions">
-            <button class="ui mini positive button" id="upimg_sure">确认</button>
+            <button class="ui mini positive button" type="submit" id="upimg_sure">确认</button>
+            </form>
             <button class="ui mini negative button">取消</button>
         </div>
     </div>
 
 
 </div>
-{% endblock %}
+{% endblock %}templates
 
 {% block exjs %}
 <script src="/static/js/template/mobmanage.js"></script>

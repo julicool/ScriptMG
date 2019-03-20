@@ -9,9 +9,16 @@ from django.http import JsonResponse
 from django.db.models import Count  # 数据库查询统计
 import json
 import time
+import oss2
+
+# 配置信息
+# --- 阿里云oss配置 ---
+auth = oss2.Auth("LTAIw9vL1c8S7eHI", "iZbLlBXiK9JEF9oD1em81bZVsqVlcz")
+bucket = oss2.Bucket(auth, 'https://oss-ap-southeast-1.aliyuncs.com', 'julicool-img')
+oss_host = "http://julicool-img.oss-ap-southeast-1.aliyuncs.com/"
 
 
-def surelogin(request):
+def surelogin(request):  # 登陆确认接口
     if request.POST:
         userinfo = json.loads(request.body)
         username = userinfo['un']
@@ -50,7 +57,7 @@ def surelogin(request):
                     return response
 
 
-def addmob(request):
+def addmob(request):  # 添加设备接口
     if request.POST:
         mobname = request.POST["mobname"]
         mobmodel = request.POST["mobmodel"]
@@ -69,19 +76,22 @@ def addmob(request):
         return HttpResponse("请检查请求")
 
 
-def delmob(request):
+def delmob(request):  # 删除设备接口
     if request.POST:
-        del_info = json.loads(request.body)
-        mobileinfo.objects.filter(id=del_info['id']).delete()
+        del_info = request.POST['id']
+        print(del_info)
+        mobileinfo.objects.filter(id=del_info).delete()
+        bucket.delete_object(str(del_info) + ".jpg")
         data = {"resultCode": 0, "resultContent": "success"}
         return JsonResponse(data, safe=False)
 
 
-def getmob(request):
+def getmob(request):  # 获取当前设备信息接口
     if request.GET:
         if request.GET['w'] != None:
             mobinfo = mobileinfo.objects.filter(id=request.GET['w']).values('mobname_id', 'mobmodel', 'mobstat',
-                                                                            'resolution', 'system_type', 'system_numb')
+                                                                            'resolution', 'system_type', 'system_numb',
+                                                                            'imgurl')
             print(mobinfo)
             data = list(mobinfo)
             return JsonResponse(data, safe=False)
@@ -93,29 +103,29 @@ def getmob(request):
         start = json.loads(request.POST['start'])
         end = start + 5
         sum = (mobileinfo.objects.aggregate(count=Count('id')))['count'] / 10
-        if(sum == int(sum)):
-            sum = int(sum)-1
+        if (sum == int(sum)):
+            sum = int(sum) - 1
         else:
             sum = int(sum)
         if end > sum:
             end = sum
         for i in range(start, end + 1):
             moblist[i] = list(mobileinfo.objects.values('mobname__deploy_name', 'mobmodel', 'mobstat', 'resolution',
-                                                        'system_type', 'system_numb', 'id').order_by('-id')[
+                                                        'system_type', 'system_numb', 'id', 'imgurl').order_by('-id')[
                               i * 10:(i + 1) * 10])
         sum_inf = {'sum': sum * 10, 'start': start, 'end': end}
         data = {'moblist': moblist, 'sum_inf': sum_inf}
         return JsonResponse(data, safe=False)
 
 
-def get_mob_list(request):
+def get_mob_list(request):  # 获取所有机型列表
     dev_list = sys_dict.objects.filter(dic_name="mobname").values('id', 'deploy_name')
     dev_list = list(dev_list)
     data = {'dev_list': dev_list}
     return JsonResponse(data, safe=False)
 
 
-def updmob(request):
+def updmob(request):  # 更新设备信息接口
     if request.POST:
         id = request.POST["id"]
         mobname = request.POST["mobname"]
@@ -137,7 +147,7 @@ def updmob(request):
         return HttpResponse("更新失败")
 
 
-def mob_stat(request):
+def mob_stat(request):  # 获取设备状态信息接口
     moblist = list(
         mobileinfo.objects.filter(mobstat=0).values('id', 'mobname__deploy_name', 'mobmodel', 'mobstat', 'resolution',
                                                     'system_type', 'system_numb', 'username', 'frist_time',
@@ -148,7 +158,7 @@ def mob_stat(request):
     return JsonResponse(moblist, safe=False)
 
 
-def bor_mob(request):
+def bor_mob(request):  # 设备借用接口
     if request.POST:
         mobinf = json.loads(request.body)
         mobileinfo.objects.filter(id=mobinf['u_id']).update(username=mobinf['u_name'], frist_time=int(time.time()),
@@ -161,14 +171,14 @@ def bor_mob(request):
         return JsonResponse(data, safe=False)
 
 
-def exprmob(request):
+def exprmob(request):  # 设备借用状态接口
     if request.POST:
         moblist = {}
         start = json.loads(request.POST['start'])
         end = start + 5
         sum = (mobileinfo.objects.filter(last_time__gt=0).aggregate(count=Count('id')))['count'] / 11
-        if(sum == int(sum)):
-            sum = int(sum)-1
+        if (sum == int(sum)):
+            sum = int(sum) - 1
         else:
             sum = int(sum)
         if end > sum:
@@ -176,14 +186,14 @@ def exprmob(request):
         for i in range(start, end + 1):
             moblist[i] = list(
                 mobileinfo.objects.filter(last_time__gt=0).values('mobname__deploy_name', 'mobmodel',
-                                          'username',
-                                          'frist_time', 'last_time',
-                                          'id').order_by('last_time')[
+                                                                  'username',
+                                                                  'frist_time', 'last_time',
+                                                                  'id').order_by('last_time')[
                 i * 11:(i + 1) * 11])
         for i in moblist:
             for m in range(0, len(moblist[i])):
                 moblist[i][m]['frist_time'] = time.strftime("%m月%d日 %H:%M", time.localtime(moblist[i][m]['frist_time']))
-                if(moblist[i][m]['last_time']<time.time()):
+                if (moblist[i][m]['last_time'] < time.time()):
                     moblist[i][m]['urgent'] = 1
                 else:
                     moblist[i][m]['urgent'] = 0
@@ -193,7 +203,7 @@ def exprmob(request):
         return JsonResponse(data, safe=False)
 
 
-def returnmob(request):
+def returnmob(request):  # 设备归还接口
     if request.POST:
         try:
             mobid = int(request.POST['id'])
@@ -203,3 +213,13 @@ def returnmob(request):
         except Exception as e:
             data = {'resultCode': 1, 'resultMess': str(e)}
             return JsonResponse(data, safe=False)
+
+
+def uploadimg(request):  # 上传设备图片接口
+    if request.FILES:
+        id = request.POST['id']
+        files = request.FILES.get('mobimg')
+        bucket.put_object(id + ".jpg", files)
+        imgurl = oss_host + id + ".jpg?x-oss-process=image/resize,h_250"
+        mobileinfo.objects.filter(id=id).update(imgurl=imgurl)
+    return HttpResponseRedirect('/mobman')

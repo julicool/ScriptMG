@@ -169,11 +169,16 @@ $("#edits_mobname").change(function cho_iphone(){
 })
 
 
-function imgshow(){
+function imgshow(btn){
+    var id = $(btn).parent().prev().text()
+    $("#imgs img").attr("src", oss_host+id+".jpg?x-oss-process=image/resize,h_500");
     $("#imgs").dimmer("show");
 }
 
-function upshow(){
+function upshow(btn){
+    var id = $(btn).parent().prevAll().last().text();
+    console.log(id);
+    $("#mobid").attr("value", id);
     $("#upimg").modal("show");
 }
 
@@ -245,7 +250,7 @@ function show_list(n){
         var system_numb = document.createElement('td');
         var bott = document.createElement('td');
         var id = "<td style='display:none;'>" + v['id'] + "</td>";
-        img.innerHTML = '<img class="ui mini image" src="/static/img/mobimg/111.png" onclick="imgshow()">';
+        img.innerHTML = '<img class="ui mini image" src="' + v['imgurl'] + '" onclick="imgshow(this)">';
         mobname.innerHTML = v['mobname__deploy_name'] + " " + v['mobmodel'];
         if (v['mobstat']==0){
             mobstat.innerHTML = "可用";
@@ -271,8 +276,7 @@ function show_list(n){
 function delmob(id){
     var y = {}
     y.id = id;
-    y = JSON.stringify(y);
-    $.ajax({
+     $.ajax({
         type: "post",
         url: "/delmob",
         data: y,
