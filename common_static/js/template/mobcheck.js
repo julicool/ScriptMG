@@ -1,7 +1,7 @@
 
 var moblist = {};
 function getmoblist(n){
-    $("#mbshow").append('<div class="ui inverted active dimmer"><div class="ui big loader"></div></div>');
+//    $("#mbshow").append('<div class="ui inverted active dimmer"><div class="ui big loader"></div></div>');
     $.ajax({
         type: "post",
         url: "/exprmob",
